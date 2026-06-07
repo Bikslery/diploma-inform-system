@@ -1,0 +1,29 @@
+services:
+  app:
+    build: .
+    volumes:
+      - db_data:/app/data
+      - static_vol:/app/staticfiles
+      - media_vol:/app/media
+    environment:
+      - DEBUG=False
+      - SECRET_KEY=django-prod-x7k9m2np4qv8rjswbtly3h6fce5a1d0g
+      - ALLOWED_HOSTS=91.219.150.106,s1675500.smartape-vps.com,localhost
+    restart: always
+
+  nginx:
+    image: nginx:1.27-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - static_vol:/app/staticfiles:ro
+      - media_vol:/app/media:ro
+    depends_on:
+      - app
+    restart: always
+
+volumes:
+  db_data:
+  static_vol:
+  media_vol:

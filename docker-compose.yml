@@ -11,6 +11,7 @@ services:
       - DEBUG=False
       - SECRET_KEY=django-prod-x7k9m2np4qv8rjswbtly3h6fce5a1d0g
       - ALLOWED_HOSTS=91.219.150.106,s1675500.smartape-vps.com,localhost
+      - DB_PATH=data/db.sqlite3
     restart: always
 
   nginx:

@@ -1,0 +1,62 @@
+{% extends 'staff/base.html' %}
+{% block content %}
+<h3>Администрирование</h3>
+<ul class="nav nav-tabs mb-3">
+    <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#employees">Сотрудники</a></li>
+    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#logs">Журнал уведомлений</a></li>
+</ul>
+<div class="tab-content">
+    <div class="tab-pane fade show active" id="employees">
+        <a href="{% url 'staff:import_employees' %}" class="btn btn-success mb-3">📥 Импортировать сотрудников (CSV)</a>
+        <table class="table table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>Логин</th>
+                    <th>Email</th>
+                    <th>Отдел</th>
+                    <th>Руководитель</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for emp in employees %}
+                <tr>
+                    <td>{{ emp.user.username }}</td>
+                    <td>{{ emp.email }}</td>
+                    <td>{{ emp.department.name|default:"-" }}</td>
+                    <td>{% if emp.is_manager %}✅{% else %}❌{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="logs">
+        <a href="{% url 'staff:export_logs_csv' %}" class="btn btn-info mb-3">📎 Экспорт в CSV</a>
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>Уведомление</th>
+                    <th>Сотрудник</th>
+                    <th>Статус</th>
+                    <th>Время</th>
+                    <th>Действие</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td>{{ log.notification.title|truncatechars:50 }}</td>
+                    <td>{{ log.employee.user.get_full_name|default:log.employee.user.username }}</td>
+                    <td>{{ log.get_status_display }}</td>
+                    <td>{{ log.sent_at|date:"d.m.Y H:i" }}</td>
+                    <td>
+                        <a href="{% url 'staff:notification_report' log.notification.id %}"
+                            class="btn btn-sm btn-info">Детали</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<a href="{% url 'staff:dashboard' %}" class="btn btn-secondary mt-3">На главную</a>
+{% endblock %}

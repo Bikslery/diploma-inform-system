@@ -1,0 +1,37 @@
+{% extends 'staff/base.html' %}
+{% block content %}
+<h3>Отчёт по отправленным уведомлениям</h3>
+<table class="table table-striped mt-3">
+    <thead>
+        <tr>
+            <th>Заголовок</th>
+            <th>Дата отправки</th>
+            <th>Всего сотрудников</th>
+            <th>Прочитано</th>
+            <th>Процент</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in report_data %}
+        <tr>
+            <td>{{ item.notification_title }}</td>
+            <td>{{ item.notification.created_at|date:"d.m.Y H:i" }}</td>
+            <td>{{ item.total }}</td>
+            <td>{{ item.read }}</td>
+            <td>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: {{ item.percent }}%;"
+                        aria-valuenow="{{ item.percent }}" aria-valuemin="0" aria-valuemax="100">{{ item.percent }}%
+                    </div>
+                </div>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" class="text-center">Вы ещё не отправляли уведомлений</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{% url 'staff:dashboard' %}" class="btn btn-secondary">Назад</a>
+{% endblock %}

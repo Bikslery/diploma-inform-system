@@ -1,0 +1,23 @@
+{% extends 'staff/base.html' %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h4>{{ log.notification.title }}</h4>
+        {% if log.notification.is_urgent %}<span class="badge bg-danger">Срочно</span>{% endif %}
+    </div>
+    <div class="card-body">
+        <p>{{ log.notification.text|linebreaks }}</p>
+        <hr>
+        <p>Отправлено: {{ log.sent_at|date:"d.m.Y H:i" }}</p>
+        <p>Статус:
+            {% if log.status == 'sent' %}
+            <span class="badge bg-warning">Не прочитано</span>
+            <a href="{% url 'staff:mark_as_read' log.id %}" class="btn btn-sm btn-success ms-2">Отметить прочитанным</a>
+            {% else %}
+            <span class="badge bg-success">Прочитано {{ log.read_at|date:"d.m.Y H:i" }}</span>
+            {% endif %}
+        </p>
+        <a href="{% url 'staff:my_notifications' %}" class="btn btn-secondary">Назад</a>
+    </div>
+</div>
+{% endblock %}

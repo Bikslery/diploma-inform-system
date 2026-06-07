@@ -1,0 +1,19 @@
+{% extends 'staff/base.html' %}
+{% block content %}
+<h3>Импорт сотрудников из CSV</h3>
+<div class="card mt-3">
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Загрузить и импортировать</button>
+            <a href="{% url 'staff:admin_dashboard' %}" class="btn btn-secondary">Отмена</a>
+        </form>
+        <hr>
+        <h5>Пример CSV</h5>
+        <pre>login,email,phone,department_id,is_manager
+ivanov,ivanov@company.com,89111234567,1,1
+petrova,petrova@company.com,89217654321,2,0</pre>
+    </div>
+</div>
+{% endblock %}

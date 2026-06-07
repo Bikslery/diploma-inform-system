@@ -1,0 +1,48 @@
+{% extends 'staff/base.html' %}
+{% block content %}
+<h3>Мои уведомления</h3>
+<table class="table table-bordered table-hover mt-3">
+    <thead class="table-dark">
+        <tr>
+            <th>Заголовок</th>
+            <th>Текст</th>
+            <th>Дата отправки</th>
+            <th>Статус</th>
+            <th>Действие</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for log in logs %}
+        <tr class="{% if log.status == 'sent' %}table-warning{% else %}table-default{% endif %}">
+            <td>
+                <a href="{% url 'staff:notification_detail' log.id %}">
+                    {{ log.notification.title }}
+                </a>
+                {% if log.notification.is_urgent %}<span class="urgent-badge ms-2">Срочно</span>{% endif %}
+            </td>
+            <td>{{ log.notification.text|truncatechars:100 }}</td>
+            <td>{{ log.sent_at|date:"d.m.Y H:i" }}</td>
+            <td>
+                {% if log.status == 'sent' %}
+                ✉️ Не прочитано
+                {% else %}
+                ✅ Прочитано {{ log.read_at|date:"d.m.Y H:i" }}
+                {% endif %}
+            </td>
+            <td>
+                {% if log.status == 'sent' %}
+                <a href="{% url 'staff:mark_as_read' log.id %}" class="btn btn-sm btn-primary">Отметить прочитанным</a>
+                {% else %}
+                <span class="text-success">✔️</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" class="text-center">Нет уведомлений</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{% url 'staff:dashboard' %}" class="btn btn-secondary">Назад</a>
+{% endblock %}

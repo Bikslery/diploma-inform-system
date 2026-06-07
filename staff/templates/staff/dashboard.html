@@ -1,0 +1,59 @@
+{% extends 'staff/base.html' %}
+{% block content %}
+<h2>Добро пожаловать, {{ user.get_full_name|default:user.username }}</h2>
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-danger text-white">Непрочитанные уведомления</div>
+            <ul class="list-group list-group-flush">
+                {% for log in unread %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{ log.notification.title }}</strong>
+                        {% if log.notification.is_urgent %}<span class="urgent-badge ms-2">Срочно</span>{% endif %}
+                    </div>
+                    <a href="{% url 'staff:mark_as_read' log.id %}" class="btn btn-sm btn-success">Отметить
+                        прочитанным</a>
+                </li>
+                {% empty %}
+                <li class="list-group-item text-muted">Нет новых уведомлений</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Последние уведомления</div>
+            <ul class="list-group list-group-flush">
+                {% for log in recent %}
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>{{ log.notification.title }}</span>
+                    <span class="badge bg-secondary">{{ log.get_status_display }}</span>
+                </li>
+                {% empty %}
+                <li class="list-group-item text-muted">Нет истории</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% if user.employee.is_manager %}
+<div class="mt-4">
+    <a href="{% url 'staff:send_notification' %}" class="btn btn-primary">➕ Отправить уведомление</a>
+    <a href="{% url 'staff:manager_report' %}" class="btn btn-info">📊 Отчёт по отправленным</a>
+</div>
+{% endif %}
+{% if user.is_superuser %}
+<div class="mt-4">
+    <a href="{% url 'staff:admin_dashboard' %}" class="btn btn-dark">⚙️ Администрирование</a>
+</div>
+{% endif %}
+{% endblock %}
+<!-- Диагностика -->
+<div class="alert alert-secondary">
+    <strong>Отладка:</strong><br>
+    user.authenticated: {{ user.is_authenticated }}<br>
+    Есть ли employee: {% if user.employee %}Да{% else %}НЕТ{% endif %}<br>
+    is_manager: {% if user.employee.is_manager %}True{% else %}False{% endif %}<br>
+    is_superuser: {{ user.is_superuser }}
+</div>

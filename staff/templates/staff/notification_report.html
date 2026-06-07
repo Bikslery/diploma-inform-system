@@ -1,0 +1,44 @@
+{% extends 'staff/base.html' %}
+{% block content %}
+<h3>Детальный отчёт по уведомлению</h3>
+<div class="card mb-3">
+    <div class="card-header">
+        <strong>{{ notification.title }}</strong>
+        {% if notification.is_urgent %}<span class="badge bg-danger">Срочно</span>{% endif %}
+    </div>
+    <div class="card-body">
+        <p>{{ notification.text|linebreaks }}</p>
+        <p><strong>Дата отправки:</strong> {{ notification.created_at|date:"d.m.Y H:i" }}</p>
+        <p>Автор: {{ notification.author.user.get_full_name|default:notification.author.user.username }}</p>
+    </div>
+</div>
+
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Сотрудник (ФИО)</th>
+            <th>Email</th>
+            <th>Статус</th>
+            <th>Время отправки</th>
+            <th>Время прочтения</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in report_data %}
+        <tr class="{% if item.status == 'sent' %}table-warning{% else %}table-success{% endif %}">
+            <td>{{ item.full_name }}</td>
+            <td>{{ item.email }}</td>
+            <td>{% if item.status == 'sent' %}Не прочитано{% else %}Прочитано{% endif %}</td>
+            <td>{{ item.sent_at|date:"d.m.Y H:i" }}</td>
+            <td>{% if item.read_at %}{{ item.read_at|date:"d.m.Y H:i" }}{% else %}—{% endif %}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" class="text-center">Нет данных</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{% url 'staff:admin_dashboard' %}" class="btn btn-secondary">Назад</a>
+{% endblock %}

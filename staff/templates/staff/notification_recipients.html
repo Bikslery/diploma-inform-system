@@ -1,0 +1,42 @@
+{% extends 'staff/base.html' %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h4>Детали уведомления: {{ notification.title }}</h4>
+        {% if notification.is_urgent %}<span class="badge bg-danger">Срочно</span>{% endif %}
+    </div>
+    <div class="card-body">
+        <p><strong>Текст:</strong> {{ notification.text|linebreaks }}</p>
+        <p><strong>Отправлено:</strong> {{ notification.created_at|date:"d.m.Y H:i" }}</p>
+        <p><strong>Автор:</strong> {{ notification.author.user.get_full_name }}</p>
+        <p><strong>Статус прочтения:</strong> {{ read_count }} из {{ total }} сотрудников прочитали ({{
+            read_count|floatformat:0 }})</p>
+    </div>
+</div>
+
+<h3 class="mt-4">Список получателей</h3>
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Сотрудник (ФИО)</th>
+            <th>Email</th>
+            <th>Статус</th>
+            <th>Время отправки</th>
+            <th>Время прочтения</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for r in recipients %}
+        <tr>
+            <td>{{ r.full_name }}</td>
+            <td>{{ r.email }}</td>
+            <td>{% if r.status == 'read' %}<span class="badge bg-success">Прочитано</span>{% else %}<span
+                    class="badge bg-warning">Не прочитано</span>{% endif %}</td>
+            <td>{{ r.sent_at|date:"d.m.Y H:i" }}</td>
+            <td>{% if r.read_at %}{{ r.read_at|date:"d.m.Y H:i" }}{% else %}—{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{% url 'staff:manager_report' %}" class="btn btn-secondary">Назад к отчёту</a>
+{% endblock %}

@@ -14,7 +14,7 @@
     <tbody>
         {% for item in report_data %}
         <tr>
-            <td>{{ item.notification_title }}</td>
+            <td><a href="{% url 'staff:notification_recipients_detail' item.notification_id %}">{{ item.notification_title }}</a></td>
             <td>{{ item.notification.created_at|date:"d.m.Y H:i" }}</td>
             <td>{{ item.total }}</td>
             <td>{{ item.read }}</td>

@@ -49,11 +49,3 @@
 </div>
 {% endif %}
 {% endblock %}
-<!-- Диагностика -->
-<div class="alert alert-secondary">
-    <strong>Отладка:</strong><br>
-    user.authenticated: {{ user.is_authenticated }}<br>
-    Есть ли employee: {% if user.employee %}Да{% else %}НЕТ{% endif %}<br>
-    is_manager: {% if user.employee.is_manager %}True{% else %}False{% endif %}<br>
-    is_superuser: {{ user.is_superuser }}
-</div>

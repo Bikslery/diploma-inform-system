@@ -1,9 +1,24 @@
 {% extends 'staff/base.html' %}
 {% block content %}
+<style>
+    .login-header {
+        background-color: #000000 !important;
+        text-shadow: 0 0 10px rgba(255,255,255,0.5), 0 0 20px rgba(255,255,255,0.2);
+        font-size: 16px;
+        letter-spacing: 0.5px;
+    }
+    .btn-primary:active,
+    .btn-primary:focus {
+        background-color: #000000 !important;
+        color: #ffffff !important;
+        border-color: #444 !important;
+        box-shadow: 0 0 12px rgba(255,255,255,0.5) !important;
+    }
+</style>
 <div class="row justify-content-center mt-5">
-    <div class="col-md-4">
+    <div class="col-md-6 col-lg-5">
         <div class="card shadow">
-            <div class="card-header bg-primary text-white text-center">Вход в систему</div>
+            <div class="card-header text-center login-header">Вход в систему</div>
             <div class="card-body">
                 <form method="post">
                     {% csrf_token %}
